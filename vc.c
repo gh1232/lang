@@ -1,27 +1,36 @@
-
-
-
 #include <stdio.h>
 
-int main (int argc, char * args){
- Shell* s=newShell();
- runShell(s);
- deleteShell(s);
- return 0;
-}
+typedef void** object;
 typedef struct {
 
+}* Shell;
 
-} Shell;
+object newObject(){
 
-Shell* newShell(){
- Shell* s; 
+
+}
+
+object newType(char* type){
+ 
+
+}
+
+
+Shell newShell(){
+ Shell s; 
   return s;
 } 
 
 int newRepl(){
- Interpreter* i= newInterpreter();
- runInterpreter(i);
+ Interpreter i;
+
+ i=evalute("");
  deleteInterpreter(i);
+ return 0;
+}
+int main (int argc, char* args){
+ Shell s;
+ s=executeInShell("");
+ deleteShell(s);
  return 0;
 }
