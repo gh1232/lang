@@ -3,19 +3,30 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<time.h>
-int deckSize=52;
+
+#define debug 1
+#ifdef debug
+ #define pd(f,v) (printf(f,v))
+ #else 
+  #define pd(f,v) 
+#endif
 typedef unsigned int Card;
 char suits[] = {'S','H','D','C'} ;
-typedef struct Deck {
+typedef struct {
  Card deck[52];
  int pos;
+int deckSize;
  int maxShuffle;
 } * Deck;
- Deck initializeDeck(Deck d){
-    for (int i=deckSize-1;i>=0;i--){
+ Deck initializeDeck(int size){
+  Deck d;
+  d->deckSize=size;
+    for (int i=d->deckSize-1;i>=0;i--){
        d->deck[i]=i;
+ pd("%d",i);
+ pd(" = %d\n",d->deck[i]);
     }  
- d->pos=51; d->maxShuffle=51;
+ d->pos=d->deckSize-1; d->maxShuffle=d->deckSize-1;
  return d;
  }
  Deck shuffleDeck(Deck d){
@@ -23,18 +34,19 @@ typedef struct Deck {
         srand((unsigned) time(&t));
   int r=0; Card c;
   for (int i=d->maxShuffle;i>=0;--i){
-        r=rand() % 52;
+        r=rand() % d->deckSize;
         c=d->deck[i];
         d->deck[i]=d->deck[r];
         d->deck[r]=c;
 
   }
+  d->pos=d->deckSize-1;
   return d;
  }
- Deck printDeck(Deck d,char *sep){
-   printf("deck=");
-   for (int i=deckSize-1;i>=0;i--){
-    printf("%d%s",d->deck[i],sep);
+ Deck printDeck(Deck d){
+   printf("deck= ");
+   for (int i=d->deckSize-1;i>=0;i--){
+    printf("%d ",d->deck[i]);
 
    }
     printf("\n");
@@ -45,15 +57,16 @@ typedef struct Deck {
 int main (int argc , char* args[]){
  char *ch;
  Deck deck;
- deck=initializeDeck(deck);
- deck=printDeck(deck," "); 
+ pd("%d",5);
+ deck=initializeDeck(52);
+ deck=printDeck(deck); 
 deck=shuffleDeck(deck);
- deck=printDeck(deck," "); 
+ deck=printDeck(deck); 
   
+/*
 
-
- while(1){
-     printf ("1 HCP count test\n");
+ while(0){
+     printf ("0 HCP count test\n");
 
   printf ("q quit\n");
   scanf("%c",ch);
@@ -63,7 +76,9 @@ deck=shuffleDeck(deck);
   }
  }
 
-
+*/
 exit:
+
+
   return 0;
 }

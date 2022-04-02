@@ -1,21 +1,22 @@
 #include <stdio.h>
 
+#define sObjectRep 1
 typedef char* nameType;
 typedef void* typeType;
 typedef void* valueType;
-#ifdef paObject
+#ifdef paObjectRep
 typedef void** objectType;
 typedef objectType object;
 #define getAddress(o) ((void*) (&(o->)))
 #endif 
 
-#ifdef psObject
-typedef {
+#ifdef psObjectRep
+typedef struct {
  typeType type;
  valueType value;
 
 } sObject;
-typedef sObject objectType;
+typedef sObject* objectType;
 typedef objectType object;
 #define setType(o,t) (o->type=(t))
 #define setValue(o,t) (o->value=(t))
@@ -28,8 +29,8 @@ typedef objectType object;
  #define printObjectValue(o) (printf("type=",getValue(o,v)))
 #endif 
 
-#ifdef sObject
-typedef {
+#ifdef sObjectRep
+typedef struct {
  typeType type;
  valueType value;
 } sObject;
@@ -41,14 +42,18 @@ typedef objectType object;
 #define getType(o) (o.type)
 #define getValue(o) (o.value)
 
+#define getAddress(o) ((void*) (&(o)))
+ #define printObjectAddress(o) (printf("%p ",getAddress(o)))
+ #define printObjectType(o) (printf("%10llu ",getType(o)))
+ #define printObjectValue(o) (printf("%p \n",(valueType)getValue(o)))
 #endif 
-#ifdef rObject
+#ifdef rObjectRep
 
-typedef {
+typedef struct {
  nameType  name;
  typeType type;
  valueType value;
-} obj; 
+} rObject; 
 typedef rObject objectType;
 typedef objectType object;
 #define setType(o,t) (o->type=(t))
@@ -64,7 +69,7 @@ typedef objectType object;
 
 #endif 
 
-#ifdef pObject
+#ifdef pObjectRep
 typedef void* objectType;
 typedef objectType object;
 #define setType(o,t) (o.type=(t))
@@ -86,21 +91,16 @@ objectType newObject(typeType t, valueType v){
 typedef char* typeNameType;
 
 objectType deleteObject(objectType o){
- objectType o;
- setType(o,t);
- setValue(o,v);
  return o;
 }
 objectType printObject(objectType o){
-
- printObjectAddress(o);
+ printf("address                type value\n");
+  printObjectAddress(o);
  printObjectType(o);
  printObjectValue(o);
-
-
  return o;
 }
-object newType(typeNameType typeName){
+objectType newType(typeNameType typeName){
  static typeType typeCounter =(typeType)1;
  objectType o=newObject(typeCounter,typeName);
 
@@ -109,14 +109,16 @@ object newType(typeNameType typeName){
  attributes[1]=(int)typeCounter;
  attributes[2]= (char*) type;
 */
- typeCounter=(typeType)(((long int)(typeCounter))+1);
+ typeCounter=(typeType)(((long long int)(typeCounter))+1);
  return o;  
 }
 // fullprogablatrt introsp refl unlikepy,lisp,js
-
-int main (int argc, char* args){
- object object1;
- object1 = newType("String");
- 
+int main (int argc, char* args[]){
+ objectType o1;
+ o1 = newType("String");
+ printObject(o1); 
+ printObject(newType("Int")); 
+ printObject(newType("Nat")); 
+ printObject(newType("Real")); 
  return 0;
 }
