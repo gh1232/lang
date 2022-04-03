@@ -4,6 +4,11 @@
 typedef char* nameType;
 typedef void* typeType;
 typedef void* valueType;
+int printError(char* m){
+  printf ("Error= %s=\n",m);
+  return 0;
+}
+
 #ifdef paObjectRep
 typedef void** objectType;
 typedef objectType object;
@@ -45,7 +50,7 @@ typedef objectType object;
 #define getAddress(o) ((void*) (&(o)))
  #define printObjectAddress(o) (printf("%p ",getAddress(o)))
  #define printObjectType(o) (printf("%10llu ",getType(o)))
- #define printObjectValue(o) (printf("%p \n",(valueType)getValue(o)))
+ #define printObjectValue(o) (printf("%10llu \n",(long long int)getValue(o)))
 #endif 
 #ifdef rObjectRep
 
@@ -112,13 +117,63 @@ objectType newType(typeNameType typeName){
  typeCounter=(typeType)(((long long int)(typeCounter))+1);
  return o;  
 }
+objectType nat64Type;
+objectType nullObject;
+
+objectType newNat64(long long int a){
+ 
+ return newObject(getType(nat64Type),(void*)a);
+}
+
+int isNat64 (objectType a){
+ if (getType(a)==getType(nat64Type)){
+   return 1;
+
+ }
+ return 0;
+}
+
+objectType addNat64 (objectType a, objectType b){
+ long long int c;
+  
+ if (isNat64(a)){
+ if (isNat64(b)){
+
+ c=(long long int)(getValue(a) + (long long int)(getValue(b)));
+  return newObject(getType(a),c);    
+ } else {
+  printError("is not Nat64");
+  return (objectType) nullObject;
+ }
+
+ } else {
+  printError("is not Nat64");
+ return (objectType) nullObject;
+ }
+
+}
+
 // fullprogablatrt introsp refl unlikepy,lisp,js
 int main (int argc, char* args[]){
  objectType o1;
  o1 = newType("String");
- printObject(o1); 
- printObject(newType("Int")); 
- printObject(newType("Nat")); 
- printObject(newType("Real")); 
+ 
+ objectType a;
+ objectType b;
+ objectType c;
+ objectType nat64Type;
+ objectType nullType;
+ nullType=newType("Null");
+ nullObject=newObject(getType(nullType),NULL);
+// printObject(o1); 
+// printObject(newType("Int")); 
+ printObject(nat64Type=newType("Nat64")); 
+// printObject(newType("Real")); 
+ a=newNat64(10009);
+ b=newNat64(2001);
+ c=addNat64(a,b);
+ printObject(a);
+ printObject(b);
+ printObject(c);
  return 0;
 }
