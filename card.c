@@ -21,6 +21,7 @@ int deckSize;
  Deck initializeDeck(int size){
   Deck d;
   d->deckSize=size;
+pd("%d",1);
     for (int i=d->deckSize-1;i>=0;i--){
        d->deck[i]=i;
  pd("%d",i);

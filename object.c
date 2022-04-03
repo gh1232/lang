@@ -1,28 +1,28 @@
 #include <stdio.h>
 
 #define sObjectRep 1
-typedef char* nameType;
-typedef void* typeType;
-typedef void* valueType;
+typedef char* Name;
+typedef void* Type;
+typedef void* Value;
 int printError(char* m){
   printf ("Error= %s=\n",m);
   return 0;
 }
 
 #ifdef paObjectRep
-typedef void** objectType;
-typedef objectType object;
+typedef void** Object;
+typedef Object object;
 #define getAddress(o) ((void*) (&(o->)))
 #endif 
 
 #ifdef psObjectRep
 typedef struct {
- typeType type;
- valueType value;
+ Type type;
+ Value value;
 
 } sObject;
-typedef sObject* objectType;
-typedef objectType object;
+typedef sObject* Object;
+typedef Object object;
 #define setType(o,t) (o->type=(t))
 #define setValue(o,t) (o->value=(t))
 
@@ -36,11 +36,11 @@ typedef objectType object;
 
 #ifdef sObjectRep
 typedef struct {
- typeType type;
- valueType value;
+ Type type;
+ Value value;
 } sObject;
-typedef sObject objectType;
-typedef objectType object;
+typedef sObject Object;
+typedef Object object;
 #define setType(o,t) (o.type=(t))
 #define setValue(o,t) (o.value=(t))
 
@@ -55,12 +55,12 @@ typedef objectType object;
 #ifdef rObjectRep
 
 typedef struct {
- nameType  name;
- typeType type;
- valueType value;
+ Name  name;
+ Type type;
+ Value value;
 } rObject; 
-typedef rObject objectType;
-typedef objectType object;
+typedef rObject Object;
+typedef Object object;
 #define setType(o,t) (o->type=(t))
 #define setValue(o,t) (o->value=(t))
 
@@ -75,8 +75,8 @@ typedef objectType object;
 #endif 
 
 #ifdef pObjectRep
-typedef void* objectType;
-typedef objectType object;
+typedef void* Object;
+typedef Object object;
 #define setType(o,t) (o.type=(t))
 #define setValue(o,t) (o.value=(t))
 #define getType(o) (o->type)
@@ -86,8 +86,8 @@ typedef objectType object;
 
 
 
-objectType newObject(typeType t, valueType v){
- objectType o;
+Object newObject(Type t, Value v){
+ Object o;
  setType(o,t);
  setValue(o,v);
  return o;
@@ -95,45 +95,45 @@ objectType newObject(typeType t, valueType v){
 
 typedef char* typeNameType;
 
-objectType deleteObject(objectType o){
+Object deleteObject(Object o){
  return o;
 }
-objectType printObject(objectType o){
+Object printObject(Object o){
  printf("address                type value\n");
   printObjectAddress(o);
  printObjectType(o);
  printObjectValue(o);
  return o;
 }
-objectType newType(typeNameType typeName){
- static typeType typeCounter =(typeType)1;
- objectType o=newObject(typeCounter,typeName);
+Object newType(typeNameType typeName){
+ static Type typeCounter =(Type)1;
+ Object o=newObject(typeCounter,typeName);
 
 /* void* attributes[3];
  attributes[0]=(int)3;
  attributes[1]=(int)typeCounter;
  attributes[2]= (char*) type;
 */
- typeCounter=(typeType)(((long long int)(typeCounter))+1);
+ typeCounter=(Type)(((long long int)(typeCounter))+1);
  return o;  
 }
-objectType nat64Type;
-objectType nullObject;
+Object Nat64;
+Object nullObject;
 
-objectType newNat64(long long int a){
+Object newNat64(long long int a){
  
- return newObject(getType(nat64Type),(void*)a);
+ return newObject(getType(Nat64),(void*)a);
 }
 
-int isNat64 (objectType a){
- if (getType(a)==getType(nat64Type)){
+int isNat64 (Object a){
+ if (getType(a)==getType(Nat64)){
    return 1;
 
  }
  return 0;
 }
 
-objectType addNat64 (objectType a, objectType b){
+Object addNat64 (Object a, Object b){
  long long int c;
   
  if (isNat64(a)){
@@ -143,31 +143,31 @@ objectType addNat64 (objectType a, objectType b){
   return newObject(getType(a),c);    
  } else {
   printError("is not Nat64");
-  return (objectType) nullObject;
+  return (Object) nullObject;
  }
 
  } else {
   printError("is not Nat64");
- return (objectType) nullObject;
+ return (Object) nullObject;
  }
 
 }
 
 // fullprogablatrt introsp refl unlikepy,lisp,js
 int main (int argc, char* args[]){
- objectType o1;
+ Object o1;
  o1 = newType("String");
  
- objectType a;
- objectType b;
- objectType c;
- objectType nat64Type;
- objectType nullType;
- nullType=newType("Null");
- nullObject=newObject(getType(nullType),NULL);
+ Object a;
+ Object b;
+ Object c;
+ Object Nat64;
+ Object Null;
+ Null=newType("Null");
+ nullObject=newObject(getType(Null),NULL);
 // printObject(o1); 
 // printObject(newType("Int")); 
- printObject(nat64Type=newType("Nat64")); 
+ printObject(Nat64=newType("Nat64")); 
 // printObject(newType("Real")); 
  a=newNat64(10009);
  b=newNat64(2001);
@@ -175,5 +175,7 @@ int main (int argc, char* args[]){
  printObject(a);
  printObject(b);
  printObject(c);
+ printObject(Nat64);
+
  return 0;
 }
