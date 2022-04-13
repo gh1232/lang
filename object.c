@@ -1,3 +1,6 @@
+#ifndef OBJECTC
+#define OBJECTC
+
 #include <stdio.h>
 
 #define sObjectRep 1
@@ -107,6 +110,7 @@ Object printObject(Object o){
 }
 Object newType(typeNameType typeName){
  static Type typeCounter =(Type)1;
+ typeCounter=(Type)(((long long int)(typeCounter))+1);
  Object o=newObject(typeCounter,typeName);
 
 /* void* attributes[3];
@@ -114,14 +118,13 @@ Object newType(typeNameType typeName){
  attributes[1]=(int)typeCounter;
  attributes[2]= (char*) type;
 */
- typeCounter=(Type)(((long long int)(typeCounter))+1);
  return o;  
 }
 Object Nat64;
-Object nullObject;
+Object null;
 
 Object newNat64(long long int a){
- 
+ // printObject(Nat64); 
  return newObject(getType(Nat64),(void*)a);
 }
 
@@ -139,35 +142,38 @@ Object addNat64 (Object a, Object b){
  if (isNat64(a)){
  if (isNat64(b)){
 
- c=(long long int)(getValue(a) + (long long int)(getValue(b)));
-  return newObject(getType(a),c);    
+ c=(long long int)((long long int) getValue(a) + (long long int)(getValue(b)));
+  return newObject(getType(Nat64),(void*)c);    
  } else {
   printError("is not Nat64");
-  return (Object) nullObject;
+  return (Object) null;
  }
 
  } else {
   printError("is not Nat64");
- return (Object) nullObject;
+ return (Object) null;
  }
 
 }
 
 // fullprogablatrt introsp refl unlikepy,lisp,js
 int main (int argc, char* args[]){
- Object o1;
- o1 = newType("String");
+ Object String;
+ String = newType("String");
  
  Object a;
  Object b;
  Object c;
  Object Nat64;
  Object Null;
+ Nat64=newType("Nat64");
  Null=newType("Null");
- nullObject=newObject(getType(Null),NULL);
+ null=newObject(getType(Null),NULL);
 // printObject(o1); 
 // printObject(newType("Int")); 
- printObject(Nat64=newType("Nat64")); 
+ printObject(String); 
+ printObject(Null); 
+ printObject(null); 
 // printObject(newType("Real")); 
  a=newNat64(10009);
  b=newNat64(2001);
@@ -179,3 +185,5 @@ int main (int argc, char* args[]){
 
  return 0;
 }
+
+#endif 
